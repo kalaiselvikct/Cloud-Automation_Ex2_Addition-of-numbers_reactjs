@@ -6,14 +6,23 @@ function App() {
   const [number2, setNumber2] = useState("");
   const [sum, setSum] = useState(null);
 
-  const handleAddition = () => {
-    const num1 = parseFloat(number1);
-    const num2 = parseFloat(number2);
-
-    if (!isNaN(num1) && !isNaN(num2)) {
-      setSum(num1 + num2);
-    } else {
-      setSum("Invalid input");
+  const handleAddition = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/calculate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          num1: parseFloat(number1),
+          num2: parseFloat(number2),
+          operation: "add",
+        }),
+      });
+      const data = await response.json();
+      setSum(data.result);
+    } catch (error) {
+      setSum("Error occurred");
     }
   };
 
